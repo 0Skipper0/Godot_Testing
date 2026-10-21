@@ -1,0 +1,39 @@
+[gd_scene format=4 uid="uid://dtpvbdlajyi23"]
+
+[ext_resource type="PackedScene" uid="uid://5xrq7yv6yw5o" path="res://Scenes/player.tscn" id="1_sarp5"]
+[ext_resource type="Texture2D" uid="uid://blr5p4t1coqad" path="res://Sprites/Counter-Sheet.png" id="2_y1dus"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gtwrx"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_y1dus"]
+texture = ExtResource("2_y1dus")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSet" id="TileSet_f8ak5"]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_y1dus")
+
+[node name="Game" type="Node2D" unique_id=2111597429]
+
+[node name="Player" parent="." unique_id=1310348229 instance=ExtResource("1_sarp5")]
+position = Vector2(-106, 27)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1039634249]
+position = Vector2(106, -27)
+zoom = Vector2(4, 4)
+position_smoothing_enabled = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1642520289]
+position = Vector2(3, 122)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=828592757]
+shape = SubResource("WorldBoundaryShape2D_gtwrx")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1152685269]
+tile_map_data = PackedByteArray("AAAGAAMAAAAAAAAAAAAFAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAADAAMAAAAAAAAAAAACAAMAAAAAAAAAAAABAAMAAAAAAAAAAAAAAAMAAAAAAAAAAAD//wMAAAAAAAAAAAD+/wMAAAAAAAAAAAD9/wMAAAAAAAAAAAD8/wMAAAAAAAAAAAD7/wMAAAAAAAAAAAD6/wMAAAAAAAAAAAD5/wMAAAAAAAAAAAAFAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9////AAAAAAAAAAD8////AAAAAAAAAAAHAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAALAAMAAAAAAAAAAAAMAAMAAAAAAAAAAAANAAMAAAAAAAAAAAAOAAMAAAAAAAAAAAAPAAMAAAAAAAAAAAAQAAMAAAAAAAAAAAARAAMAAAAAAAAAAAASAAMAAAAAAAAAAAATAAMAAAAAAAAAAAAUAAMAAAAAAAAAAAAVAAMAAAAAAAAAAAAWAAMAAAAAAAAAAAAXAAMAAAAAAAAAAAAYAAMAAAAAAAAAAAAZAAMAAAAAAAAAAAAaAAMAAAAAAAAAAAAbAAMAAAAAAAAAAAAcAAMAAAAAAAAAAAD4/wMAAAAAAAAAAAD3/wMAAAAAAAAAAAD2/wMAAAAAAAAAAAD7//3/AAAAAAAAAAD7//7/AAAAAAAAAAD7////AAAAAAAAAAA=")
+tile_set = SubResource("TileSet_f8ak5")
+rendering_quadrant_size = 32
+physics_quadrant_size = 32
