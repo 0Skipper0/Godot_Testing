@@ -7,5 +7,5 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	$Label.text = str(CURRENT_CANS)+"/"+str(MAX_CANS)
+#func _process(delta: float) -> void:
+#	$Label.text = str(CURRENT_CANS)+"/"+str(MAX_CANS)

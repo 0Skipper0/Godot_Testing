@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cnfyswfpqy2wf" path="res://Scripts/movement.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://3dq7fkn1hpmv" path="res://Sprites/BottomOSoda-Sheet.png" id="1_v0iea"]
+[ext_resource type="Script" uid="uid://cdpf5hqxdn30o" path="res://scripts/player_mananger.gd" id="3_6t5aa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cvnsp"]
 atlas = ExtResource("1_v0iea")
@@ -136,3 +137,6 @@ frame_progress = 0.5491524
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=471683577]
 shape = SubResource("CircleShape2D_f8ak5")
+
+[node name="mananger" type="Node" parent="." unique_id=1512395835]
+script = ExtResource("3_6t5aa")
