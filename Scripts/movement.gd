@@ -1,10 +1,10 @@
 extends CharacterBody2D
 
-const MAX_SPEED = 150.0
-const ACCELERATION = 75.0   # how fast you speed up
-const DECELERATION = 200.0  # how fast you slow down when no key is held
-const JUMP_VELOCITY = -400.0
-const ROTATION_AT_100 = 100
+@export var MAX_SPEED = 150.0
+@export var ACCELERATION = 75.0   # how fast you speed up
+@export var DECELERATION = 200.0  # how fast you slow down when no key is held
+@export var JUMP_VELOCITY = -400.0
+@export var ROTATION_AT_100 = 100
 
 const RESTART_POSTITION = Vector2(0,0)
 
