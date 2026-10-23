@@ -8,6 +8,10 @@
 
 config_version=5
 
+[addons]
+
+ss2d/version="3.3.2"
+
 [application]
 
 config/name="Testing"
@@ -57,6 +61,7 @@ Reset={
 
 3d/physics_engine="Jolt Physics"
 2d/default_gravity=1200.0
+common/physics_interpolation=true
 
 [rendering]
 

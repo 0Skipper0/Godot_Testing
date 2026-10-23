@@ -7,7 +7,7 @@ extends Camera2D
 func _process(delta: float) -> void:
 	var target: Vector2
 	
-	if Input.is_physical_key_pressed(KEY_E):
+	if Input.is_action_pressed("ZoomOutCamera"):
 		target = Vector2(TARGET_ZOOM, TARGET_ZOOM)
 	else:
 		target = Vector2(NORMAL_ZOOM, NORMAL_ZOOM)

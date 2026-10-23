@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://b5nv25ampu5gx"]
+
+[ext_resource type="Texture2D" uid="uid://bkqgg2nf0w66f" path="res://Sprites/Soda.png" id="1_trwrv"]
+[ext_resource type="Script" uid="uid://dvr2d5615hv71" path="res://Scenes/Particles/End_Explosion_Particle.gd" id="1_w8aus"]
+
+[sub_resource type="Curve" id="Curve_f8ak5"]
+_data = [Vector2(0, 1), 0.0, -0.111176595, 0, 0, Vector2(0.9946809, 0.022471905), -3.1685383, 0.0, 0, 0]
+point_count = 2
+
+[node name="Explosion" type="Node2D" unique_id=1694077298]
+script = ExtResource("1_w8aus")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="." unique_id=1006261015]
+emitting = false
+amount = 50
+texture = ExtResource("1_trwrv")
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+lifetime_randomness = 0.5
+emission_shape = 1
+emission_sphere_radius = 20.01
+spread = 180.0
+gravity = Vector2(0, -20)
+initial_velocity_min = 10.0
+initial_velocity_max = 50.0
+angular_velocity_min = -100.0
+angular_velocity_max = 100.0
+radial_accel_min = -10.0
+radial_accel_max = 10.0
+damping_min = 10.0
+damping_max = 30.0
+angle_min = -720.0
+angle_max = 720.0
+scale_amount_min = 0.5
+scale_amount_curve = SubResource("Curve_f8ak5")
+
+[connection signal="finished" from="CPUParticles2D" to="." method="_on_cpu_particles_2d_finished"]

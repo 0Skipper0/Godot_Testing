@@ -5,6 +5,8 @@ extends Node2D
 @export var BOB_HEIGHT: float = 5
 @export var BOB_ENABLED: bool = true
 
+@export var ExplosionParticle = preload("res://Scenes/Particles/explosion.tscn")
+
 @export var PLAYER_MANANGER: Node
 
 var ORGINAL_Y: float
@@ -29,4 +31,11 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		#print("coin collected")
 		body.get_node("mananger").COINS_COLLECTED += 1
+		
+		var particle = ExplosionParticle.instantiate()
+		get_tree().current_scene.add_child(particle)
+		particle.global_position = global_position
+		particle.reset_physics_interpolation()
+		particle.get_node("CPUParticles2D").emitting = true
+		
 		queue_free() # Replace with function body.

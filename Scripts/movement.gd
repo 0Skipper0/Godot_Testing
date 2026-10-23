@@ -6,6 +6,8 @@ extends CharacterBody2D
 @export var JUMP_VELOCITY = -400.0
 @export var ROTATION_AT_100 = 100
 
+
+
 const RESTART_POSTITION = Vector2(0,0)
 
 
@@ -13,10 +15,10 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if Input.is_action_just_pressed("Jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
-	var direction := Input.get_axis("ui_left", "ui_right")
+	var direction := Input.get_axis("Left", "Right")
 	if direction and is_on_floor():
 		velocity.x = move_toward(velocity.x, direction * MAX_SPEED, ACCELERATION * delta)
 	elif is_on_floor():
@@ -26,6 +28,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
-	if Input.is_physical_key_pressed(KEY_R):
+	if Input.is_action_just_pressed("Reset"):
 		global_position = RESTART_POSTITION
 		velocity = Vector2.ZERO
+		reset_physics_interpolation()
