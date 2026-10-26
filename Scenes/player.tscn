@@ -128,6 +128,7 @@ animations = [{
 radius = 15.5
 
 [node name="Player" type="CharacterBody2D" unique_id=1310348229]
+floor_snap_length = 16.0
 script = ExtResource("1_cvnsp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1763270807]
