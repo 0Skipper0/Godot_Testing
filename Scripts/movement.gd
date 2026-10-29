@@ -7,9 +7,9 @@ extends CharacterBody2D
 @export var JUMP_VELOCITY = -400
 @export var ROTATION_AT_100 = 100
 
-@export var Slope_Gravity = 400
+@export var Slope_Gravity = 600
 @export var Max_Slope_Speed = 1000
-@export var Slope_Acceleration = 500
+@export var Slope_Acceleration = 150
 @export var Slope_Jump_mod = 1.5
 
 var Old_Floor_angle = Vector2(0,0)
@@ -47,9 +47,12 @@ func _physics_process(delta: float) -> void:
 		var floor_angle = get_floor_normal()
 		print(str(velocity.x))
 		# floor_normal.x is positive when sliding down-right, negative when down-left
-		if floor_angle.x <= -0.05 or floor_angle.x >= 0.05:
+		if floor_angle.x <= -0.05 or floor_angle.x >= 0.05 and (velocity.x*floor_angle.x) > 0:
 			
 			velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta)
+			velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
+		elif floor_angle.x <= -0.05 or floor_angle.x >= 0.05 and (velocity.x*floor_angle.x) < 0:
+			velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta*10)
 			velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
 			
 		if floor_angle != Old_Floor_angle and floor_angle.x >= -0.05 or floor_angle.x <= 0.05:
