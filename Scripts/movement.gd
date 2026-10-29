@@ -28,7 +28,9 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP_VELOCITY
 
 	var direction := Input.get_axis("Left", "Right")
-	if direction and is_on_floor():
+	if direction and abs(velocity.x) > MAX_SPEED and (direction*velocity.x)>0:
+		velocity.x = move_toward(velocity.x,direction*MAX_SPEED,No_Hold_Deceleration * delta)
+	elif direction and is_on_floor():
 		velocity.x = move_toward(velocity.x, direction * MAX_SPEED, ACCELERATION * delta)
 	elif is_on_floor() and not direction:
 		velocity.x = move_toward(velocity.x, 0, No_Hold_Deceleration * delta)
