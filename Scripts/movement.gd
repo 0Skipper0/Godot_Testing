@@ -2,15 +2,17 @@ extends CharacterBody2D
 
 @export var MAX_SPEED = 150
 @export var ACCELERATION = 75  # how fast you speed up
-@export var DECELERATION = 200 # how fast you slow down when no key is held
-@export var No_Hold_Deceleration = 10
+@export var DECELERATION = 75 # how fast you slow down when no key is held
+@export var No_Hold_Deceleration = 1
 @export var JUMP_VELOCITY = -400
 @export var ROTATION_AT_100 = 100
 
-@export var Slope_Gravity = 600
+@export var Slope_Gravity = 400
 @export var Max_Slope_Speed = 1000
-@export var Slope_Acceleration = 150
+@export var Slope_Acceleration = 500
+@export var Slope_Jump_mod = 1.5
 
+var Old_Floor_angle = Vector2(0,0)
 
 const RESTART_POSTITION = Vector2(0,0)
 
@@ -21,23 +23,24 @@ func _physics_process(delta: float) -> void:
 	
 	#print(str(floor_normal.x))
 	
+	#rotation = floor_normal.x
+	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	if Input.is_action_just_pressed("Jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+
 
 	var direction := Input.get_axis("Left", "Right")
 	if direction and abs(velocity.x) > MAX_SPEED and (direction*velocity.x)>0:
-		velocity.x = move_toward(velocity.x,direction*MAX_SPEED,No_Hold_Deceleration * delta)
+		velocity.x = move_toward(velocity.x,direction*MAX_SPEED, No_Hold_Deceleration * delta)
 	elif direction and is_on_floor():
 		velocity.x = move_toward(velocity.x, direction * MAX_SPEED, ACCELERATION * delta)
 	elif is_on_floor() and not direction:
-		velocity.x = move_toward(velocity.x, 0, No_Hold_Deceleration * delta)
+		velocity.x = move_toward(velocity.x, 0, DECELERATION * delta)
 
 	$AnimatedSprite2D.speed_scale = velocity.x / ROTATION_AT_100
 
-	move_and_slide()
+	
 	
 	
 	if is_on_floor():
@@ -48,7 +51,15 @@ func _physics_process(delta: float) -> void:
 			
 			velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta)
 			velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
-	
+			
+		if floor_angle != Old_Floor_angle and floor_angle.x >= -0.05 or floor_angle.x <= 0.05:
+			velocity.y = velocity.x * floor_angle.x * Slope_Jump_mod
+		var Old_Floor_angle = get_floor_normal()
+		
+	if Input.is_action_just_pressed("Jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		
+	move_and_slide()
 	if Input.is_action_just_pressed("Reset"):
 		global_position = RESTART_POSTITION
 		velocity = Vector2.ZERO
