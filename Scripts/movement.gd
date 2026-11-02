@@ -8,9 +8,11 @@ extends CharacterBody2D
 @export var ROTATION_AT_100 = 100
 
 @export var Slope_Gravity = 600
+#var Slope_Gravity_Mod = 1
+var  Time_On_Slope = 0
 @export var Max_Slope_Speed = 1000
 @export var Slope_Acceleration = 150
-@export var Slope_Jump_mod = 1.5
+@export var Slope_Jump_mod = 2
 
 var Old_Floor_angle = Vector2(0,0)
 
@@ -45,19 +47,25 @@ func _physics_process(delta: float) -> void:
 	
 	if is_on_floor():
 		var floor_angle = get_floor_normal()
-		print(str(velocity.x))
-		# floor_normal.x is positive when sliding down-right, negative when down-left
-		if floor_angle.x <= -0.05 or floor_angle.x >= 0.05 and (velocity.x*floor_angle.x) > 0:
+		#print(str(velocity.x))
+		
+		if abs(floor_angle.x) <= .05:
+			Time_On_Slope = 1
+		else:
+			Time_On_Slope += delta
 			
-			velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta)
-			velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
-		elif floor_angle.x <= -0.05 or floor_angle.x >= 0.05 and (velocity.x*floor_angle.x) < 0:
-			velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta*10)
-			velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
+		if abs(floor_angle.x) >= .05:
+			if Time_On_Slope <= 2.5:
+				velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta)
+				velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
+			elif Time_On_Slope >2.5:
+				velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta * Time_On_Slope)
+				velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
 			
-		if floor_angle != Old_Floor_angle and floor_angle.x >= -0.05 or floor_angle.x <= 0.05:
-			velocity.y = velocity.x * floor_angle.x * Slope_Jump_mod
-		var Old_Floor_angle = get_floor_normal()
+		if (round(floor_angle.x*100)/100) != (round(Old_Floor_angle.x*100)/100) and abs(floor_angle.x) <= .05:
+			print(str(round(floor_angle.x*10)/10) + " " + str(round(Old_Floor_angle.x*10)/10))
+			velocity.y = velocity.x * Old_Floor_angle.x * Slope_Jump_mod
+		Old_Floor_angle = get_floor_normal()
 		
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
