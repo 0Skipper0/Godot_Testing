@@ -1,20 +1,22 @@
 extends CharacterBody2D
 
 @export var MAX_SPEED = 150
-@export var ACCELERATION = 75  # how fast you speed up
-@export var DECELERATION = 75 # how fast you slow down when no key is held
+@export var ACCELERATION = 150  # how fast you speed up
+@export var DECELERATION = 150 # how fast you slow down when no key is held
 @export var No_Hold_Deceleration = 1
 @export var JUMP_VELOCITY = -400
 @export var ROTATION_AT_100 = 100
 
-@export var Slope_Gravity = 600
+@export var Slope_Gravity = 960
 #var Slope_Gravity_Mod = 1
 var  Time_On_Slope = 0
 @export var Max_Slope_Speed = 1000
 @export var Slope_Acceleration = 150
-@export var Slope_Jump_mod = 2
+@export var Slope_Jump_mod = 1.4
 
-var Old_Floor_angle = Vector2(0,0)
+#var Old_Floor_angle = Vector2(0,0)
+var was_on_slope: bool = false
+var last_slope_normal_x: float = 0.0
 
 const RESTART_POSTITION = Vector2(0,0)
 
@@ -42,30 +44,30 @@ func _physics_process(delta: float) -> void:
 
 	$AnimatedSprite2D.speed_scale = velocity.x / ROTATION_AT_100
 
-	
+	var floor_angle = get_floor_normal()
+	var on_floor = is_on_floor()
+	var is_flat = abs(floor_angle.x) <= .05
 	
 	
 	if is_on_floor():
-		var floor_angle = get_floor_normal()
 		#print(str(velocity.x))
-		
-		if abs(floor_angle.x) <= .05:
+		if is_flat:
 			Time_On_Slope = 1
 		else:
-			Time_On_Slope += delta
+			Time_On_Slope += (delta/2)
 			
-		if abs(floor_angle.x) >= .05:
-			if Time_On_Slope <= 2.5:
-				velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta)
-				velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
-			elif Time_On_Slope >2.5:
-				velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta * Time_On_Slope)
-				velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
+		if not is_flat:
+			velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta * (Time_On_Slope))
+			velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
 			
-		if (round(floor_angle.x*100)/100) != (round(Old_Floor_angle.x*100)/100) and abs(floor_angle.x) <= .05:
-			print(str(round(floor_angle.x*10)/10) + " " + str(round(Old_Floor_angle.x*10)/10))
-			velocity.y = velocity.x * Old_Floor_angle.x * Slope_Jump_mod
-		Old_Floor_angle = get_floor_normal()
+	if was_on_slope and (is_flat or not on_floor):
+		velocity.y = velocity.x * last_slope_normal_x * Slope_Jump_mod
+		was_on_slope = false
+	if on_floor and not is_flat:
+		was_on_slope = true
+		last_slope_normal_x = floor_angle.x
+	else:
+		was_on_slope = false
 		
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
