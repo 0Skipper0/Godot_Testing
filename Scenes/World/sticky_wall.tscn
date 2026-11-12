@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cemu4qrvd2aey"]
+
+[ext_resource type="Texture2D" uid="uid://wkvfg4fpjwq0" path="res://Sprites/Counter_Slime.png" id="1_e044q"]
+
+[sub_resource type="GDScript" id="GDScript_g0y13"]
+script/source = "extends StaticBody2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_56h02"]
+size = Vector2(32, 32)
+
+[node name="StaticBody2D" type="StaticBody2D" unique_id=498119968]
+script = SubResource("GDScript_g0y13")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1024895043]
+texture = ExtResource("1_e044q")
+
+[node name="Wall" type="CollisionShape2D" parent="." unique_id=105706024]
+shape = SubResource("RectangleShape2D_56h02")

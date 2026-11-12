@@ -14,6 +14,9 @@ var  Time_On_Slope = 0
 @export var Slope_Acceleration = 150
 @export var Slope_Jump_mod = 1.4
 
+#Sticky Walls:
+#@export var Sticky_wall_Scene: StaticBody2D
+
 #var Old_Floor_angle = Vector2(0,0)
 var was_on_slope: bool = false
 var last_slope_normal_x: float = 0.0
@@ -22,18 +25,10 @@ const RESTART_POSTITION = Vector2(0,0)
 
 
 func _physics_process(delta: float) -> void:
-	
-	#var floor_normal = get_floor_normal()
-	
-	#print(str(floor_normal.x))
-	
-	#rotation = floor_normal.x
-	
+
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
-
-
+		
 	var direction := Input.get_axis("Left", "Right")
 	if direction and abs(velocity.x) > MAX_SPEED and (direction*velocity.x)>0:
 		velocity.x = move_toward(velocity.x,direction*MAX_SPEED, No_Hold_Deceleration * delta)
@@ -48,31 +43,38 @@ func _physics_process(delta: float) -> void:
 	var on_floor = is_on_floor()
 	var is_flat = abs(floor_angle.x) <= .05
 	
+	print(str(velocity.x))
 	
-	if is_on_floor():
-		#print(str(velocity.x))
-		if is_flat:
-			Time_On_Slope = 1
-		else:
-			Time_On_Slope += (delta/2)
-			
-		if not is_flat:
-			velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta * (Time_On_Slope))
-			velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
-			
-	if was_on_slope and (is_flat or not on_floor):
-		velocity.y = velocity.x * last_slope_normal_x * Slope_Jump_mod
-		was_on_slope = false
-	if on_floor and not is_flat:
-		was_on_slope = true
-		last_slope_normal_x = floor_angle.x
-	else:
-		was_on_slope = false
+	#rotation = floor_angle.x	
+	#if is_on_floor():
+		##print(str(velocity.x))
+		#if is_flat:
+			#Time_On_Slope = 1
+		#else:
+			#Time_On_Slope += (delta/2)
+			#
+		#if not is_flat:
+			#velocity.x = move_toward(velocity.x, floor_angle.x * Slope_Gravity, Slope_Acceleration * delta * (Time_On_Slope))
+			#velocity.x = clamp(velocity.x, -Max_Slope_Speed, Max_Slope_Speed)
+			#
+		#if was_on_slope and (is_flat or not on_floor):
+			#velocity.y = velocity.x * last_slope_normal_x * Slope_Jump_mod
+			#was_on_slope = false
+		#if on_floor and not is_flat:
+			#was_on_slope = true
+			#last_slope_normal_x = floor_angle.x
+		#else:
+			#was_on_slope = false
 		
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		
 	move_and_slide()
+	
+	#if move_and_slide():
+		#print(get_last_slide_collision().get_collider())
+	
+	
 	if Input.is_action_just_pressed("Reset"):
 		global_position = RESTART_POSTITION
 		velocity = Vector2.ZERO
